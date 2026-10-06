@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:app/pages/user/user_page.dart';
 import 'package:app/styles/app_colors.dart';
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +10,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _usuario = TextEditingController();
+  final _senha = TextEditingController();
+
+  @override
+  void dispose() {
+    _usuario.dispose();
+    _senha.dispose();
+    super.dispose();
+  }
+
+  void _entrarComGovBr() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const UserPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                       'LOGIN',
                       style: TextStyle(
                         fontSize: 25,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight(700),
                         color: AppColors.primary,
                       ),
                     ),
@@ -37,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _entrarComGovBr,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.govBR,
                           foregroundColor: Colors.white,
@@ -59,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Entrar com gov.br',
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight(600),
                                 letterSpacing: 0.3,
                               ),
                             ),
@@ -74,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(fontSize: 13),
                     ),
                     const SizedBox(height: 20),
-                    // Acesso secundário (testes / administração)
                     ExpansionTile(
                       title: const Text(
                         'Acesso interno (testes e administração)',
@@ -85,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                       childrenPadding: const EdgeInsets.only(top: 10),
                       children: [
                         TextField(
+                          controller: _usuario,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.person,
@@ -102,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 15),
                         TextField(
+                          controller: _senha,
                           obscureText: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
@@ -132,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Entrar',
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight(600),
                               ),
                             ),
                           ),
