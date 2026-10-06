@@ -1,3 +1,5 @@
+import 'package:app/pages/home_page.dart';
+import 'package:app/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -5,7 +7,8 @@ void main() {
     MaterialApp(
       title: "Focos de incêndio em Goiás",
       debugShowCheckedModeBanner: false,
-      home: Placeholder(),
+      theme: ThemeData(colorSchemeSeed: AppColors.primary),
+      home: HomePage(),
     ),
   );
 }
