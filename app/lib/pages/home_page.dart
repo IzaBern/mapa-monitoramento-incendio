@@ -2,9 +2,14 @@ import 'package:app/pages/login_page.dart';
 import 'package:app/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const new({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
