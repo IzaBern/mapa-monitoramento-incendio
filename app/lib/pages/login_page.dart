@@ -1,4 +1,9 @@
+import 'package:app/data/mock_data.dart';
+import 'package:app/models/user_role.dart';
+import 'package:app/pages/admin/admin_page.dart';
+import 'package:app/pages/authority/authority_page.dart';
 import 'package:app/pages/user/user_page.dart';
+import 'package:app/pages/verifier/verifier_page.dart';
 import 'package:app/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -20,12 +25,41 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _entrarComGovBr() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const UserPage()),
-    );
+  void _abrir(Widget page) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
+
+  // Usuário comum: gov.br leva direto para a página do usuário.
+  void _entrarComGovBr() => _abrir(const UserPage());
+
+  // Atores internos: usuário e senha definem a página pelo papel.
+  void _entrarInterno() {
+    final usuario = _usuario.text.trim().toLowerCase();
+    final senha = _senha.text;
+
+    final ator = mockActors
+        .where((a) => a.usuario.toLowerCase() == usuario && a.senha == senha)
+        .firstOrNull;
+
+    if (ator == null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Usuário ou senha inválidos.')),
+        );
+      return;
+    }
+
+    _senha.clear();
+    _abrir(_paginaDoPapel(ator.role));
+  }
+
+  Widget _paginaDoPapel(UserRole role) => switch (role) {
+    UserRole.user => const UserPage(),
+    UserRole.verificador => const VerifierPage(),
+    UserRole.autoridade => const AuthorityPage(),
+    UserRole.admin => const AdminPage(),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                       collapsedShape: const Border(),
                       childrenPadding: const EdgeInsets.only(top: 10),
                       children: [
+                        const SizedBox(height: 10),
                         TextField(
                           controller: _usuario,
                           decoration: InputDecoration(
@@ -122,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextField(
                           controller: _senha,
                           obscureText: true,
+                          onSubmitted: (_) => _entrarInterno(),
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.lock,
@@ -146,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 18),
                             ),
-                            onPressed: () {},
+                            onPressed: _entrarInterno,
                             child: const Text(
                               'Entrar',
                               style: TextStyle(

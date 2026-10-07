@@ -6,7 +6,15 @@ class RoleScaffold extends StatelessWidget {
   final UserRole role;
   final Widget body;
 
-  const RoleScaffold({super.key, required this.role, required this.body});
+  /// Opcional: usado pelo admin para exibir as abas (TabBar) na AppBar.
+  final PreferredSizeWidget? bottom;
+
+  const RoleScaffold({
+    super.key,
+    required this.role,
+    required this.body,
+    this.bottom,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +43,7 @@ class RoleScaffold extends StatelessWidget {
             onPressed: () => Navigator.popUntil(context, (r) => r.isFirst),
           ),
         ],
+        bottom: bottom,
       ),
       body: Align(
         alignment: Alignment.topCenter,
