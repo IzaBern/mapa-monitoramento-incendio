@@ -1,9 +1,10 @@
+import 'package:app/models/occurrence.dart';
 import 'package:app/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 
-/// Card de ocorrência: miniatura, local, data/hora, vegetação e status.
 class OccurrenceCard extends StatelessWidget {
-  const OccurrenceCard({super.key});
+  final Occurrence occurrence;
+  const OccurrenceCard({super.key, required this.occurrence});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +30,12 @@ class OccurrenceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Rio Verde, GO',
+                    occurrence.local,
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '06/10/2026 · Lavoura',
+                    "${occurrence.dataHora} · ${occurrence.vegetacao}",
                     style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                   ),
                   const SizedBox(height: 6),
@@ -44,15 +45,15 @@ class OccurrenceCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.statusPending.withValues(alpha: 0.15),
+                      color: occurrence.status.color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      "Pendente",
+                      occurrence.status.label,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight(600),
-                        color: AppColors.statusPending,
+                        color: occurrence.status.color,
                       ),
                     ),
                   ),

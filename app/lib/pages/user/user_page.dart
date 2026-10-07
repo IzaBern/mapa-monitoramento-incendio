@@ -1,10 +1,10 @@
+import 'package:app/data/mock_data.dart';
 import 'package:app/models/user_role.dart';
 import 'package:app/styles/app_colors.dart';
 import 'package:app/widgets/occurrence_card.dart';
 import 'package:app/widgets/role_scaffold.dart';
 import 'package:flutter/material.dart';
 
-/// Página do usuário: mapa, registrar ocorrência e acompanhar envios (RF3, RF6, RF8).
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
 
@@ -56,8 +56,7 @@ class UserPage extends StatelessWidget {
               ),
             ),
           ),
-          OccurrenceCard(),
-          OccurrenceCard(),
+          ...mockOccurrences.map((o)=>OccurrenceCard(occurrence: o)),
         ],
       ),
     );
