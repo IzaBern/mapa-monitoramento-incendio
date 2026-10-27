@@ -25,3 +25,23 @@
 * `Verificador:` pode visualizar as ocorrências de status **pendente** e modificar o status para **veficada** ou **negada**;
 * `Autoridade:` pode visualizar as ocorrências de status **verificada** e modificar para o status de **equipe mobilizada** e depois para o status de **concluída**;
 * `Administrador:` tem funções de construção e manutenção do sistema. É o responsável pelo cadastro de novos atores `verificador` e `autoridade`, além de poder modificar livremente os status de ocorrências.
+
+## Como rodar
+
+**1. Banco + API** (veja `backend/README.md`):
+```bash
+cd backend
+npm install
+npm run dev      # API em http://localhost:3000
+```
+
+**2. App Flutter**:
+```bash
+cd app
+flutter pub get
+flutter run -d windows                                          # ou -d chrome
+flutter run --dart-define=API_URL=http://10.0.2.2:3000          # emulador Android
+flutter run --dart-define=API_URL=http://SEU_IP:3000            # celular físico (mesmo Wi-Fi)
+```
+
+**Logins de teste**: gov.br (cria usuário no banco) · `verificador` / `autoridade` / `admin` com senha `123456`.
