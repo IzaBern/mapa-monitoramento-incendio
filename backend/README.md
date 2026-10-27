@@ -79,11 +79,24 @@ Lista todas as ocorrências registradas (usado pelo mapa).
       "longitude": -48.2833,
       "tipo_vegetacao": "cerrado",
       "status": "pendente",
+      "usuario_id": 1,
       "data_hora": "2026-10-07T10:30:00.000Z",
       "foto_url": "data:image/jpeg;base64,..."
     }
   ]
 }
+```
+
+### `PATCH /api/ocorrencias/:id/status`
+Altera o status de uma ocorrência (usado por verificador, autoridade e admin).
+Valores aceitos: `pendente`, `verificado`, `negado`, `mobilizada`, `concluida`.
+
+```json
+// Request
+{ "status": "verificado" }
+
+// Response
+{ "id": 1, "status": "verificado" }
 ```
 
 ## Schema do banco
@@ -140,7 +153,6 @@ Cortes intencionais para entregar o protótipo no prazo — não é a versão fi
 - Login não valida senha (apenas encontra ou cria o usuário pelo e-mail)
 - Sem autenticação gov.br / JWT real
 - Imagem armazenada como base64 direto no banco (não em storage externo)
-- Sem verificação por administrador implementada ainda
 - Sem testes automatizados
 
 ## Problemas comuns
