@@ -37,7 +37,17 @@ class OccurrenceCard extends StatelessWidget {
                     color: AppColors.secondary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Center(child: Text("Foto")),
+                  child: occurrence.fotoBytes != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.memory(
+                            occurrence.fotoBytes!,
+                            fit: BoxFit.cover,
+                            width: 80,
+                            height: 80,
+                          ),
+                        )
+                      : const Center(child: Text("Foto")),
                 ),
                 const SizedBox(width: 20),
                 Expanded(

@@ -3,6 +3,7 @@ import 'package:app/models/user_role.dart';
 import 'package:app/pages/admin/admin_page.dart';
 import 'package:app/pages/authority/authority_page.dart';
 import 'package:app/pages/user/user_page.dart';
+import 'package:app/services/api_service.dart';
 import 'package:app/pages/verifier/verifier_page.dart';
 import 'package:app/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Usuário comum: gov.br leva direto para a página do usuário.
-  void _entrarComGovBr() => _abrir(const UserPage());
+  // Simula o gov.br: acha/cria um usuário no banco e abre a página dele.
+  // (A integração real com o gov.br fica para a próxima etapa.)
+  bool _entrando = false;
+
+  Future<void> _entrarComGovBr() async {
+    setState(() => _entrando = true);
+    try {
+      final r = await ApiService.login(
+        email: 'usuario.demo@gov.br',
+        nome: 'Usuário gov.br (demo)',
+      );
+      if (!mounted) return;
+      _abrir(UserPage(usuarioId: r.usuarioId, nome: r.nome));
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) setState(() => _entrando = false);
+    }
+  }
 
   // Atores internos: usuário e senha definem a página pelo papel.
   void _entrarInterno() {
@@ -89,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _entrarComGovBr,
+                        onPressed: _entrando ? null : _entrarComGovBr,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.govBR,
                           foregroundColor: Colors.white,

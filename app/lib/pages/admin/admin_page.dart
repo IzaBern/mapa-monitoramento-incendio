@@ -3,7 +3,9 @@ import 'package:app/models/actor.dart';
 import 'package:app/models/occurrence.dart';
 import 'package:app/models/user_role.dart';
 import 'package:app/styles/app_colors.dart';
+import 'package:app/services/api_service.dart';
 import 'package:app/widgets/occurrence_card.dart';
+import 'package:app/widgets/occurrences_loader.dart';
 import 'package:app/widgets/role_scaffold.dart';
 import 'package:app/widgets/section_title.dart';
 import 'package:flutter/material.dart';
@@ -213,24 +215,44 @@ class _OccurrencesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const SectionTitle("Todas as ocorrências"),
-        ...mockOccurrences.map(
-          (o) => OccurrenceCard(
-            occurrence: o,
-            trailing: PopupMenuButton<OccurrenceStatus>(
-              tooltip: 'Alterar status',
-              icon: const Icon(Icons.edit),
-              onSelected: (_) {}, // TODO: alterar status
-              itemBuilder: (_) => OccurrenceStatus.values
-                  .map((s) => PopupMenuItem(value: s, child: Text(s.label)))
-                  .toList(),
+    return OccurrencesLoader(
+      builder: (context, todas, recarregar) => ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Row(
+            children: [
+              Expanded(child: SectionTitle("Todas as ocorrências (${todas.length})")),
+              IconButton(
+                tooltip: 'Atualizar',
+                onPressed: recarregar,
+                icon: const Icon(Icons.refresh),
+              ),
+            ],
+          ),
+          ...todas.map(
+            (o) => OccurrenceCard(
+              occurrence: o,
+              trailing: PopupMenuButton<OccurrenceStatus>(
+                tooltip: 'Alterar status',
+                icon: const Icon(Icons.edit),
+                onSelected: (novo) async {
+                  try {
+                    await ApiService.alterarStatus(o.id, novo);
+                    await recarregar();
+                  } on ApiException catch (e) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.message)));
+                  }
+                },
+                itemBuilder: (_) => OccurrenceStatus.values
+                    .map((s) => PopupMenuItem(value: s, child: Text(s.label)))
+                    .toList(),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
